@@ -40,7 +40,7 @@ import ldmud_asyncio
 
 ### call_out() replacement
 
-```
+```python
 import ldmud, ldmud_asyncio, asyncio
 
 async def do_call_out(cb, sec):
@@ -56,7 +56,7 @@ ldmud.register_efun("py_call_out", efun_call_out)
 
 ### Call a program and return the lines
 
-```
+```python
 import ldmud, ldmud_asyncio, asyncio
 
 async def do_exec(prog, cb):
@@ -80,7 +80,7 @@ This is the synchronization example from the websockets package.
 Here we only added an efun to influence the value as well.
 
 This is the Python code:
-```
+```python
 import ldmud, ldmud_asyncio, asyncio, websockets, json
 
 STATE = {"value": 0}
@@ -139,7 +139,7 @@ ldmud.register_efun("py_ws_set_value", efun_ws_set_value)
 ```
 
 And here the HTML code to run in the browser:
-```
+```html
 <!DOCTYPE html>
 <html>
     <head>
