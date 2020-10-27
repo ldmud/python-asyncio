@@ -105,6 +105,7 @@ class LDMudEventLoop(asyncio.SelectorEventLoop):
         self._thread_id = threading.get_ident()
         self._clock_resolution = 1
         self._sigchld_handler_handle = None
+        asyncio._set_running_loop(self)
 
         ldmud.register_hook(ldmud.ON_HEARTBEAT, self._heart_beat)
         ldmud.register_hook(ldmud.ON_CHILD_PROCESS_TERMINATED, self._signal_handler)
