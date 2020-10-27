@@ -1,7 +1,7 @@
 # Python asynchronous I/O package for LDMud
 
 This is a python module that enables the use of the Python asyncio module
-with LDMud 3.6.2 and later. To module doesn't export any names, it just
+with LDMud 3.6.2 and later. The module doesn't export any names, it just
 extends the Python asyncio module to work with LDMud.
 
 ## Usage

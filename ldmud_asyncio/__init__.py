@@ -152,7 +152,7 @@ class LDMudEventLoop(asyncio.SelectorEventLoop):
         raise RuntimeError("The LDMud backend loop runs automatically.")
 
     def stop(self):
-        raise RuntimeError("The stop the LDMud backend loop you need to call the efun shutdown().")
+        raise RuntimeError("To stop the LDMud backend loop you need to call the efun shutdown().")
 
     def close(self):
         pass
