@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ldmud-asyncio",
-    version="0.0.2",
+    version="0.0.3",
     author="LDMud Team",
     author_email="ldmud-dev@UNItopia.DE",
     description="Python asynchronous I/O package for LDMud",
