@@ -105,6 +105,7 @@ class LDMudEventLoop(asyncio.SelectorEventLoop):
         self._thread_id = threading.get_ident()
         self._clock_resolution = 1
         self._sigchld_handler_handle = None
+        self._running = False
         asyncio._set_running_loop(self)
 
         ldmud.register_hook(ldmud.ON_HEARTBEAT, self._heart_beat)
@@ -184,23 +185,31 @@ class LDMudEventLoop(asyncio.SelectorEventLoop):
 
     def run_ready(self):
         """Run all tasks in the _ready list."""
-        while len(self._ready):
-            handle = self._ready.popleft()
-            if handle._cancelled:
-                continue
-            if self._debug:
-                try:
-                    self._current_handle = handle
-                    t0 = self.time()
+
+        # Prevent reentrant calls.
+        if self._running:
+            return
+        self._running = True
+        try:
+            while len(self._ready):
+                handle = self._ready.popleft()
+                if handle._cancelled:
+                    continue
+                if self._debug:
+                    try:
+                        self._current_handle = handle
+                        t0 = self.time()
+                        handle._run()
+                        dt = self.time() - t0
+                        if dt >= self.slow_callback_duration:
+                            logger.warning('Executing %s took %.3f seconds',
+                                           _format_handle(handle), dt)
+                    finally:
+                        self._current_handle = None
+                else:
                     handle._run()
-                    dt = self.time() - t0
-                    if dt >= self.slow_callback_duration:
-                        logger.warning('Executing %s took %.3f seconds',
-                                       _format_handle(handle), dt)
-                finally:
-                    self._current_handle = None
-            else:
-                handle._run()
+        finally:
+            self._running = False
 
     def run_select_event(self, key, event):
         """Run the task associated with the given selector key."""
