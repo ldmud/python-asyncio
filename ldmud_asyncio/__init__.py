@@ -264,9 +264,20 @@ class LDMudDefaultEventLoopPolicy(asyncio.AbstractEventLoopPolicy):
 
         self._watcher = watcher
 
+# Keep all task executed via run() alive.
+_current_tasks = set()
+def _unregister_task(task):
+    _current_tasks.discard(task)
+
+def _register_task(task):
+    _current_tasks.add(task)
+    task.add_done_callback(_unregister_task)
+
 def run(func):
     """Execute the given asynchronous function."""
-    asyncio.ensure_future(func)
+    future = asyncio.ensure_future(func)
+    _register_task(future)
+
     asyncio.get_event_loop().run_ready()
 
 asyncio.SelectorEventLoop = LDMudEventLoop
